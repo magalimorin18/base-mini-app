@@ -27,21 +27,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import lighthouse from "@lighthouse-web3/sdk";
+import { useFileUpload } from "@/lib/filecoin";
 
 const lighthouseApiKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_STORAGE_KEY;
+const filecoinPrivateKey = process.env.NEXT_PUBLIC_FILECOIN_PRIVATE_KEY;
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
+  const { progress, uploadFile } = useFileUpload();
   const [frameAdded, setFrameAdded] = useState(false);
   const { isConnected } = useAccount();
 
   const [file, setFile] = useState<FileList>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileMetadata, setFileMetadata] = useState<File | null>(null);
-  const [fileCID, setFileCID] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isMinting, setIsMinting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [progressMint, setProgressMint] = useState(0);
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
@@ -82,7 +86,7 @@ export default function App() {
     return null;
   }, [context, frameAdded, handleAddFrame]);
 
-  const uploadFile = async (file: FileList) => {
+  const uploadFileToLighthouse = async (file: FileList) => {
     if (!lighthouseApiKey) return;
 
     console.log("⏳Uploading image to Lighthouse...");
@@ -91,7 +95,7 @@ export default function App() {
       "Image uploaded at: https://gateway.lighthouse.storage/ipfs/" +
         output.data.Hash,
     );
-    setFileCID(output.data.Hash);
+    return output.data.Hash;
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,19 +109,36 @@ export default function App() {
     }
   };
 
+  const handleUploadToFilecoin = async () => {
+    if (!file || !title || !description || !fileMetadata || !filecoinPrivateKey)
+      return;
+    setIsUploading(true);
+    const commp = await uploadFile(fileMetadata, filecoinPrivateKey);
+    console.log("✅ Uploaded to Filecoin with CID:", commp);
+    setIsUploading(false);
+  };
+
   const handleMintNFT = async () => {
     if (!file || !title || !description) return;
 
-    await uploadFile(file);
-    console.log("✅ Uploaded to Filecoin:", fileCID);
-
     setIsMinting(true);
+
+    setProgressMint(10);
+
+    const lighthouseCID = await uploadFileToLighthouse(file);
+
+    setProgressMint(50);
+
+    console.log("lighthouseCID", lighthouseCID);
     // Simulate minting process
     await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    setProgressMint(100);
     setIsMinting(false);
 
     // Reset form after successful mint
     setFile(undefined);
+    setFileMetadata(null);
     setPreviewUrl(null);
     setTitle("");
     setDescription("");
@@ -248,6 +269,27 @@ export default function App() {
                   />
                 </div>
 
+                {/* Upload Filecoin Button */}
+                <Button
+                  onClick={handleUploadToFilecoin}
+                  disabled={!canMint || isMinting}
+                  className="w-full rounded-xl h-12 font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {isUploading
+                    ? "Uploading to Filecoin..."
+                    : "Upload File To Filecoin"}
+                  {isUploading && (
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 ">
+                      <div
+                        className="bg-green-500 h-2.5 rounded-full transition-all duration-500"
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                  )}
+                </Button>
+                {progress == 100 && file && <p>✅ Uploaded to Filecoin</p>}
+
                 {/* Mint NFT Button */}
                 <Button
                   onClick={handleMintNFT}
@@ -256,6 +298,14 @@ export default function App() {
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
                   {isMinting ? "Minting NFT..." : "Mint NFT"}
+                  {isMinting && (
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 ">
+                      <div
+                        className="bg-green-500 h-2.5 rounded-full transition-all duration-500"
+                        style={{ width: `${progressMint}%` }}
+                      ></div>
+                    </div>
+                  )}
                 </Button>
 
                 {!isConnected && (
