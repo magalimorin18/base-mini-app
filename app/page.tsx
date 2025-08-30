@@ -26,27 +26,25 @@ import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
-// import { NEXT_PUBLIC_NFT_STORAGE_API_KEY } from "@/globals";
-// import { NFTStorage, File } from "nft.storage";
+import lighthouse from "@lighthouse-web3/sdk";
+
+const lighthouseApiKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_STORAGE_KEY;
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
   const [frameAdded, setFrameAdded] = useState(false);
   const { isConnected } = useAccount();
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [file, setFile] = useState<FileList>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileMetadata, setFileMetadata] = useState<File | null>(null);
+  const [fileCID, setFileCID] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isMinting, setIsMinting] = useState(false);
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
-  // const client = new NFTStorage({
-  //   token: process.env.NEXT_PUBLIC_NFT_STORAGE_KEY || "",
-  // });
-
-  console.log("API Key:", process.env.NEXT_PUBLIC_NFT_STORAGE_KEY);
 
   useEffect(() => {
     if (!isFrameReady) {
@@ -84,28 +82,34 @@ export default function App() {
     return null;
   }, [context, frameAdded, handleAddFrame]);
 
+  const uploadFile = async (file: FileList) => {
+    if (!lighthouseApiKey) return;
+
+    console.log("⏳Uploading image to Lighthouse...");
+    const output = await lighthouse.upload(file, lighthouseApiKey, undefined);
+    console.log(
+      "Image uploaded at: https://gateway.lighthouse.storage/ipfs/" +
+        output.data.Hash,
+    );
+    setFileCID(output.data.Hash);
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
+    const file = event.target.files;
+    const fileMetadata = event.target.files?.[0];
+    if (file && fileMetadata && fileMetadata.type.startsWith("image/")) {
+      setFile(file);
+      setFileMetadata(fileMetadata);
+      const url = URL.createObjectURL(fileMetadata);
       setPreviewUrl(url);
     }
   };
 
   const handleMintNFT = async () => {
-    if (!selectedFile || !title || !description) return;
+    if (!file || !title || !description) return;
 
-    //TODO: Upload to filecoin => For now having an error with the format of the APIKEY
-    // const metadata = await client.store({
-    //   name: title,
-    //   description: description,
-    //   image: selectedFile,
-    // });
-
-    // console.log("✅ Metadata stored!");
-    // console.log("IPFS CID:", metadata.ipnft);
-    // console.log("Metadata URL:", metadata.url);
+    await uploadFile(file);
+    console.log("✅ Uploaded to Filecoin:", fileCID);
 
     setIsMinting(true);
     // Simulate minting process
@@ -113,16 +117,13 @@ export default function App() {
     setIsMinting(false);
 
     // Reset form after successful mint
-    setSelectedFile(null);
+    setFile(undefined);
     setPreviewUrl(null);
     setTitle("");
     setDescription("");
-
-    console.log("✅context", context);
   };
 
-  const canMint =
-    isConnected && selectedFile && title.trim() && description.trim();
+  const canMint = isConnected && file && title.trim() && description.trim();
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
@@ -175,6 +176,7 @@ export default function App() {
                       id="artwork"
                       type="file"
                       accept="image/*"
+                      // onChange={handleFileSelect}
                       onChange={handleFileSelect}
                       disabled={!isConnected}
                       className="hidden"
@@ -193,8 +195,8 @@ export default function App() {
                     >
                       <Upload className="w-8 h-8 text-blue-500 mb-2" />
                       <span className="text-sm text-gray-600 dark:text-gray-300">
-                        {selectedFile
-                          ? selectedFile.name
+                        {fileMetadata
+                          ? fileMetadata.name
                           : "Click to upload image"}
                       </span>
                     </Label>
