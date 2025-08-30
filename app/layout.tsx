@@ -2,7 +2,7 @@ import "./theme.css";
 import "@coinbase/onchainkit/styles.css";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
+import { Providers } from "../context/providers";
 
 export const viewport: Viewport = {
   width: "device-width",

@@ -26,9 +26,8 @@ import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
-import { NEXT_PUBLIC_NFT_STORAGE_API_KEY } from "@/globals";
-import { NFTStorage, File } from "nft.storage";
-import fs from "fs";
+// import { NEXT_PUBLIC_NFT_STORAGE_API_KEY } from "@/globals";
+// import { NFTStorage, File } from "nft.storage";
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
@@ -43,9 +42,9 @@ export default function App() {
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
-  const client = new NFTStorage({
-    token: process.env.NEXT_PUBLIC_NFT_STORAGE_KEY || "",
-  });
+  // const client = new NFTStorage({
+  //   token: process.env.NEXT_PUBLIC_NFT_STORAGE_KEY || "",
+  // });
 
   console.log("API Key:", process.env.NEXT_PUBLIC_NFT_STORAGE_KEY);
 
