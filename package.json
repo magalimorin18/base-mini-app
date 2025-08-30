@@ -1,0 +1,46 @@
+{
+  "name": "base-mini-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@coinbase/onchainkit": "latest",
+    "@farcaster/frame-sdk": "^0.1.8",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tanstack/react-query": "^5",
+    "@upstash/redis": "^1.34.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.2.1",
+    "lucide-react": "^0.542.0",
+    "next": "^15.3.3",
+    "nft.storage": "^7.2.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.27.2",
+    "wagmi": "^2.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.3.3",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "postcss": "^8",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
