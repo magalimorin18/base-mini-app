@@ -22,12 +22,22 @@ Update `.env` with:
 
 ### TODOs
 
-Prioridad:
-[X] Usar V0 de Vercel
-[X] Create mini app
-[⏳] Subir archivo a Filecoin (I started on this one, need to find the issue with the format of the API KEY)
-[] Add mint functionality
-[] Add Link para compartir en Frame en Farcaster
+✅[Magali] Usar V0 de Vercel
+✅[Magali] Create mini app: Poder subir photo de obra de arte + Add title and description
+⏳[Magali] Subir archivo a Filecoin (I started on this one, need to find the issue with the format of the API KEY)
+⏳[Magali] Poder mint as NFT
 
-Other::
-[] Update logos of the base mini app
+[Luciano] Deploy on Vercel
+[Luciano] Deploy on base mini app
+[Luciano] Improve Frontend
+
+Si tenemos tiempo:
+[] Add link para compartir en Frame en Farcaster
+[] Add AI tool to create art
+
+The tracks:
+
+- V0
+- Filecoin
+- ENS Product Good
+- Base Mini App
