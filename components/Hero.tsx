@@ -22,7 +22,7 @@ export default function Hero() {
           <Button
             variant="outline"
             size="lg"
-            className="text-lg px-8 bg-transparent"
+            className="text-lg px-8 bg-transparent border-gray-500"
           >
             Create NFT
           </Button>

@@ -87,14 +87,14 @@ export default function NFTGrid() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-8 h-8 p-0 bg-background/80 backdrop-blur-sm"
+                    className="w-8 h-8 p-0 bg-white/95 hover:bg-white text-gray-700 hover:text-gray-900 shadow-lg border border-white/20 backdrop-blur-sm"
                   >
                     <Heart className="w-4 h-4" />
                   </Button>
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-8 h-8 p-0 bg-background/80 backdrop-blur-sm"
+                    className="w-8 h-8 p-0 bg-white/95 hover:bg-white text-gray-700 hover:text-gray-900 shadow-lg border border-white/20 backdrop-blur-sm"
                   >
                     <Share2 className="w-4 h-4" />
                   </Button>

@@ -91,7 +91,7 @@ export default function NFTGallery() {
               </a>
               {saveFrameButton}
               <Wallet className="z-10">
-                <ConnectWallet>
+                <ConnectWallet className="bg-gray-900 hover:bg-gray-800 text-white">
                   <Name className="text-inherit" />
                 </ConnectWallet>
                 <WalletDropdown>
@@ -153,7 +153,7 @@ export default function NFTGallery() {
                 </a>
                 {saveFrameButton}
                 <Wallet className="z-10">
-                  <ConnectWallet>
+                  <ConnectWallet className="bg-gray-900 hover:bg-gray-800 text-white">
                     <Name className="text-inherit" />
                   </ConnectWallet>
                   <WalletDropdown>
