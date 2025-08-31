@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ExternalLink, Copy, Share2 } from "lucide-react";
+import { CheckCircle, Copy, Share2 } from "lucide-react";
 import { useState } from "react";
 
 interface NFTMintSuccessProps {
@@ -51,11 +51,6 @@ export default function NFTMintSuccess({
       // Fallback for browsers that don't support Web Share API
       copyToClipboard(window.location.href);
     }
-  };
-
-  const viewOnBaseScan = () => {
-    const baseScanUrl = `https://sepolia.basescan.org/tx/${transactionHash}`;
-    window.open(baseScanUrl, "_blank");
   };
 
   return (
@@ -167,14 +162,6 @@ export default function NFTMintSuccess({
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button
-              onClick={viewOnBaseScan}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700"
-            >
-              <ExternalLink className="w-4 h-4" />
-              View on BaseScan Sepolia
-            </Button>
-
             <Button
               onClick={shareNFT}
               variant="outline"
