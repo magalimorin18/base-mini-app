@@ -20,9 +20,6 @@ export default function NFTGallery() {
 
       {/* NFT Grid */}
       <NFTGrid />
-
-      {/* Footer */}
-      {/* <Footer /> */}
     </div>
   );
 }
