@@ -1,3 +1,4 @@
+"use client";
 import { Wallet, ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { Name, Address, EthBalance } from "@coinbase/onchainkit/identity";
 import {
@@ -5,18 +6,20 @@ import {
   WalletDropdownDisconnect,
 } from "@coinbase/onchainkit/wallet";
 import { Identity, Avatar } from "@coinbase/onchainkit/identity";
-import { Sparkles, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useAddFrame, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function NavBar() {
   const { context } = useMiniKit();
   const addFrame = useAddFrame();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [frameAdded, setFrameAdded] = useState(false);
-
+  const router = useRouter();
   const handleAddFrame = useCallback(async () => {
     const frameAdded = await addFrame();
     setFrameAdded(Boolean(frameAdded));
@@ -54,17 +57,21 @@ export default function NavBar() {
 
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <h1 className="text-2xl font-bold text-foreground">Molotov</h1>
+            <Image
+              src="/full-logo.png"
+              alt="Molotov"
+              width={100}
+              height={45}
+              className="cursor-pointer"
+              onClick={() => router.push("/")}
+            />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6 py-4">
             <Link
               href="/"
               className="text-muted-foreground hover:text-foreground transition-colors"

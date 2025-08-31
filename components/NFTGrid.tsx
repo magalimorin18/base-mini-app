@@ -159,7 +159,7 @@ export default function NFTGrid() {
                     <span>{nft.views}</span>
                   </div>
                 </div>
-                <Button className="w-full" size="sm">
+                <Button className="w-full cursor-not-allowed" size="sm">
                   Place Bid
                 </Button>
               </CardContent>
