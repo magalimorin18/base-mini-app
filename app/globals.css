@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Geist", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 80%;
-}
-
 :root {
   --background: 0 0% 100%;
   --foreground: 0 0% 10%;
@@ -17,33 +9,38 @@ body {
   --card-foreground: 0 0% 6%;
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 6%;
-  --primary: 258 90% 66%;
+  /* Updated to matte blue with reduced saturation (70% instead of 100%) */
+  --primary: 225 70% 55%; /* Increased lightness from 45% to 55% for brighter primary color */
   --primary-foreground: 0 0% 100%;
-  --secondary: 258 90% 66%;
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 225 30% 94%;
+  --secondary-foreground: 225 70% 35%; /* Increased lightness from 25% to 35% for brighter secondary foreground */
   --muted: 0 0% 98%;
   --muted-foreground: 0 0% 6%;
-  --accent: 258 90% 66%;
-  --accent-foreground: 0 0% 100%;
+  /* Updated accent to matte blue variant with lower saturation */
+  --accent: 225 40% 90%;
+  --accent-foreground: 225 70% 35%; /* Increased lightness from 25% to 35% for brighter accent foreground */
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --border: 0 0% 90%;
   --input: 0 0% 98%;
-  --ring: 258 90% 66%;
-  --chart-1: 258 90% 66%;
-  --chart-2: 258 90% 66%;
-  --chart-3: 0 84% 60%;
+  /* Updated ring color to matte blue */
+  --ring: 225 70% 55%; /* Updated ring color to match brighter primary */
+  /* Updated chart colors to matte blue variants */
+  --chart-1: 225 70% 55%;
+  --chart-2: 225 60% 65%;
+  --chart-3: 225 50% 75%;
   --chart-4: 43 96% 56%;
   --chart-5: 142 76% 36%;
   --radius: 0.5rem;
   --sidebar: 0 0% 100%;
   --sidebar-foreground: 0 0% 6%;
-  --sidebar-primary: 258 90% 66%;
+  /* Updated sidebar colors to matte blue theme */
+  --sidebar-primary: 225 70% 55%; /* Updated sidebar primary to match brighter primary */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 258 90% 66%;
-  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-accent: 225 40% 90%;
+  --sidebar-accent-foreground: 225 70% 35%; /* Updated sidebar accent foreground to brighter value */
   --sidebar-border: 0 0% 90%;
-  --sidebar-ring: 258 90% 66%;
+  --sidebar-ring: 225 70% 55%; /* Updated sidebar ring to match brighter primary */
 }
 
 .dark {
@@ -53,32 +50,37 @@ body {
   --card-foreground: 0 0% 96%;
   --popover: 0 0% 4%;
   --popover-foreground: 0 0% 96%;
-  --primary: 258 90% 66%;
+  /* Updated dark mode primary to matte blue with reduced saturation */
+  --primary: 225 60% 65%; /* Increased lightness from 55% to 65% for brighter dark mode primary */
   --primary-foreground: 0 0% 4%;
   --secondary: 0 0% 15%;
   --secondary-foreground: 0 0% 96%;
   --muted: 0 0% 12%;
   --muted-foreground: 0 0% 64%;
-  --accent: 258 90% 66%;
-  --accent-foreground: 0 0% 4%;
-  --destructive: 0 74% 42%;
+  /* Updated dark mode accent to matte blue variant */
+  --accent: 225 50% 35%; /* Increased lightness from 25% to 35% for brighter dark mode accent */
+  --accent-foreground: 0 0% 96%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 93% 94%;
   --border: 0 0% 15%;
   --input: 0 0% 12%;
-  --ring: 258 90% 66%;
-  --chart-1: 258 90% 66%;
-  --chart-2: 258 90% 66%;
+  /* Updated dark mode ring to matte blue */
+  --ring: 225 60% 65%; /* Updated dark mode ring to match brighter primary */
+  /* Updated dark mode chart colors to matte blue variants */
+  --chart-1: 225 60% 65%;
+  --chart-2: 225 50% 75%;
   --chart-3: 43 96% 56%;
   --chart-4: 300 76% 72%;
   --chart-5: 347 77% 50%;
   --sidebar: 0 0% 10%;
   --sidebar-foreground: 0 0% 96%;
-  --sidebar-primary: 258 90% 66%;
+  /* Updated dark mode sidebar colors to matte blue theme */
+  --sidebar-primary: 225 60% 65%; /* Updated dark mode sidebar primary to match brighter primary */
   --sidebar-primary-foreground: 0 0% 4%;
   --sidebar-accent: 0 0% 15%;
   --sidebar-accent-foreground: 0 0% 96%;
   --sidebar-border: 0 0% 15%;
-  --sidebar-ring: 258 90% 66%;
+  --sidebar-ring: 225 60% 65%; /* Updated dark mode sidebar ring to match brighter primary */
 }
 
 @layer base {
@@ -89,50 +91,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-/* @layer base {
-  :root {
-    --background: #ffffff;
-    --foreground: #1a1a1a;
-    --card: #fafafa;
-    --card-foreground: #0f0f0f;
-    --popover: #ffffff;
-    --popover-foreground: #0f0f0f;
-    --primary: #7c3aed;
-    --primary-foreground: #ffffff;
-    --secondary: #8b5cf6;
-    --secondary-foreground: #ffffff;
-    --muted: #fafafa;
-    --muted-foreground: #0f0f0f;
-    --accent: #8b5cf6;
-    --accent-foreground: #ffffff;
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff;
-    --border: #e5e5e5;
-    --input: #fafafa;
-    --ring: rgba(124, 58, 237, 0.5);
-    --chart-1: #7c3aed;
-    --chart-2: #8b5cf6;
-    --chart-3: #ef4444;
-    --chart-4: #f59e0b;
-    --chart-5: #10b981;
-    --radius: 0.5rem;
-    --sidebar: #ffffff;
-    --sidebar-foreground: #0f0f0f;
-    --sidebar-primary: #7c3aed;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #8b5cf6;
-    --sidebar-accent-foreground: #ffffff;
-    --sidebar-border: #e5e5e5;
-    --sidebar-ring: rgba(124, 58, 237, 0.5);
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-} */
