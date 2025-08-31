@@ -1,8 +1,21 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import { base } from "wagmi/chains";
-import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
+import { MiniKitProvider, useMiniKit } from "@coinbase/onchainkit/minikit";
+
+// Component to handle frame ready state globally
+function FrameReadyHandler() {
+  const { setFrameReady, isFrameReady } = useMiniKit();
+  
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
+  
+  return null; // This component doesn't render anything
+}
 
 export function Providers(props: { children: ReactNode }) {
   return (
@@ -18,6 +31,7 @@ export function Providers(props: { children: ReactNode }) {
         },
       }}
     >
+      <FrameReadyHandler />
       {props.children}
     </MiniKitProvider>
   );
