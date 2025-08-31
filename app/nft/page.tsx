@@ -24,10 +24,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, Upload } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAccount } from "wagmi";
+import { useAccount, useDeployContract } from "wagmi";
 import { Button } from "@/components/ui/button";
 import lighthouse from "@lighthouse-web3/sdk";
 import { useFileUpload } from "@/lib/filecoin";
+import NFT from "../contracts/NFT.json";
 
 const lighthouseApiKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_STORAGE_KEY;
 const filecoinPrivateKey = process.env.NEXT_PUBLIC_FILECOIN_PRIVATE_KEY;
@@ -46,6 +47,7 @@ export default function App() {
   const [isMinting, setIsMinting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [progressMint, setProgressMint] = useState(0);
+  const { deployContractAsync } = useDeployContract();
 
   const addFrame = useAddFrame();
   const openUrl = useOpenUrl();
@@ -129,10 +131,22 @@ export default function App() {
 
     setProgressMint(50);
 
-    console.log("lighthouseCID", lighthouseCID);
-    // Simulate minting process
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    setProgressMint(70);
 
+    const tokenURI = `https://ipfs.io/ipfs/${lighthouseCID}`;
+
+    const bytecode = NFT.bytecode as `0x${string}`;
+    const contract = await deployContractAsync({
+      abi: NFT.abi,
+      args: [title, "SYMBOL", tokenURI],
+      bytecode,
+    });
+
+    console.log("👩‍💻contract", contract);
+
+    setProgressMint(80);
+
+    setProgressMint(90);
     setProgressMint(100);
     setIsMinting(false);
 
