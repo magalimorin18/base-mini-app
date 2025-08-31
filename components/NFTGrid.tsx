@@ -16,16 +16,7 @@ const featuredNFTs = [
     views: 3421,
     category: "Abstract",
   },
-  {
-    id: 6,
-    title: "Cyber Samurai",
-    artist: "FutureWarrior",
-    price: "5.5 ETH",
-    image: "/assets/dancing-blue-night.mp4",
-    likes: 892,
-    views: 4532,
-    category: "Character",
-  },
+
   {
     id: 5,
     title: "Digital Bloom",
@@ -65,6 +56,16 @@ const featuredNFTs = [
     likes: 234,
     views: 1205,
     category: "Abstract",
+  },
+  {
+    id: 6,
+    title: "Cyber Samurai",
+    artist: "FutureWarrior",
+    price: "5.5 ETH",
+    image: "/assets/marble1.png",
+    likes: 892,
+    views: 4532,
+    category: "Character",
   },
 ];
 
