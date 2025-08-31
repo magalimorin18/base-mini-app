@@ -6,7 +6,7 @@ A decentralized platform for artists to quickly upload, mint, and share their di
 
 - 📸 **Quick Upload**: Upload your digital artwork in seconds
 - 🖼️ **NFT Minting**: Mint your art as NFTs on Base blockchain
-- 🌐 **Decentralized Storage**: Store artwork on Filecoin via NFT.Storage
+- 🌐 **Decentralized Storage**: Store artwork on Filecoin
 
 ## 🚀 Getting Started
 
@@ -31,8 +31,11 @@ Create a `.env` file in the root directory:
 # Coinbase OnchainKit API Key
 NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_coinbase_api_key_here
 
-# NFT.Storage API Key
-NEXT_PUBLIC_NFT_STORAGE_KEY=your_nft_storage_api_key_here
+# ⚠️ This key needs to be funded with USDFC and TFIL
+NEXT_PUBLIC_FILECOIN_PRIVATE_KEY=
+
+# This key is to upload data through lighthouse - speed
+NEXT_PUBLIC_LIGHTHOUSE_STORAGE_KEY=
 ```
 
 ### Getting API Keys
@@ -43,14 +46,6 @@ NEXT_PUBLIC_NFT_STORAGE_KEY=your_nft_storage_api_key_here
 2. Create an account or sign in
 3. Navigate to API Keys section
 4. Generate a new API key for OnchainKit
-5. Copy the key to your `.env` file
-
-#### NFT.Storage
-
-1. Visit [NFT.Storage](https://app.nft.storage/)
-2. Create an account or sign in
-3. Go to API Keys section
-4. Generate a new API key
 5. Copy the key to your `.env` file
 
 ### Running the Application
@@ -67,7 +62,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 - **Base** - Ethereum L2 blockchain
 - **OnchainKit** - Coinbase's blockchain development kit
 - **Filecoin** - Decentralized storage network
-- **NFT.Storage** - IPFS pinning service
 - **V0 by Vercel** - AI-powered UI generation
 
 ## 📋 Development Status
@@ -81,15 +75,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ### ⏳ In Progress
 
-- [ ] **[Magali]** Filecoin integration via NFT.Storage
-  - _Note: Currently investigating API key format issues_
+- [x] **[Magali]** Filecoin integration
 - [ ] **[Magali]** NFT minting functionality on Base
 
 ### 🔄 Pending Tasks
 
 #### High Priority
 
-- [ ] **[Luciano]** Deploy as Base Mini App
+- [x] **[Luciano]** Deploy as Base Mini App
 - [ ] **[Luciano]** Frontend UI/UX improvements
 
 #### Future Enhancements (If Time Permits)
