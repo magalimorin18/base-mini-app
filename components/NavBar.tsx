@@ -9,6 +9,7 @@ import { Sparkles, Menu, X } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useAddFrame, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function NavBar() {
   const { context } = useMiniKit();
@@ -64,24 +65,12 @@ export default function NavBar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Explore
-            </a>
-            <a
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Collections
-            </a>
-            <a
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Artists
-            </a>
+            </Link>
             {saveFrameButton}
             <Wallet className="z-10">
               <ConnectWallet className="bg-gray-900 hover:bg-gray-800 text-white">
@@ -129,20 +118,6 @@ export default function NavBar() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Explore
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors py-3 px-4 rounded-md hover:bg-accent/50 text-lg font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Collections
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors py-3 px-4 rounded-md hover:bg-accent/50 text-lg font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Artists
               </a>
               {saveFrameButton}
               <Wallet className="z-10">

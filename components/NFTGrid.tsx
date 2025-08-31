@@ -3,24 +3,36 @@ import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Eye, Heart, Share2 } from "lucide-react";
 import { Badge } from "./ui/badge";
+import Image from "next/image";
 
 const featuredNFTs = [
   {
-    id: 1,
-    title: "Cosmic Dreams #001",
-    artist: "DigitalVision",
-    price: "2.5 ETH",
-    image: "/img-placeholder.png",
-    likes: 234,
-    views: 1205,
+    id: 4,
+    title: "Quantum Flux",
+    artist: "TechnoCreator",
+    price: "4.1 ETH",
+    image: "/assets/img4.jpg",
+    likes: 678,
+    views: 3421,
     category: "Abstract",
+  },
+
+  {
+    id: 5,
+    title: "Digital Bloom",
+    artist: "NaturePixel",
+    price: "1.9 ETH",
+    image: "/assets/gif-fuego.mp4",
+    likes: 321,
+    views: 1567,
+    category: "Nature",
   },
   {
     id: 2,
-    title: "Neon Cityscape",
+    title: "Bath Blossom",
     artist: "CyberArtist",
     price: "1.8 ETH",
-    image: "/img-placeholder.png",
+    image: "/assets/img2.jpg",
     likes: 189,
     views: 892,
     category: "Digital",
@@ -30,42 +42,64 @@ const featuredNFTs = [
     title: "Ethereal Portrait",
     artist: "ArtMaster3D",
     price: "3.2 ETH",
-    image: "/img-placeholder.png",
+    image: "/assets/img3.jpg",
     likes: 456,
     views: 2103,
     category: "Portrait",
   },
   {
-    id: 4,
-    title: "Quantum Flux",
-    artist: "TechnoCreator",
-    price: "4.1 ETH",
-    image: "/img-placeholder.png",
-    likes: 678,
-    views: 3421,
+    id: 1,
+    title: "Cosmic Dreams",
+    artist: "DigitalVision",
+    price: "2.5 ETH",
+    image: "/assets/img1.jpg",
+    likes: 234,
+    views: 1205,
     category: "Abstract",
-  },
-  {
-    id: 5,
-    title: "Digital Bloom",
-    artist: "NaturePixel",
-    price: "1.9 ETH",
-    image: "/img-placeholder.png",
-    likes: 321,
-    views: 1567,
-    category: "Nature",
   },
   {
     id: 6,
     title: "Cyber Samurai",
     artist: "FutureWarrior",
     price: "5.5 ETH",
-    image: "/img-placeholder.png",
+    image: "/assets/marble1.png",
     likes: 892,
     views: 4532,
     category: "Character",
   },
 ];
+
+// Media component to handle both images and videos
+const MediaDisplay = ({ src, alt }: { src: string; alt: string }) => {
+  const isVideo =
+    src.toLowerCase().endsWith(".mp4") ||
+    src.toLowerCase().endsWith(".webm") ||
+    src.toLowerCase().endsWith(".mov");
+
+  if (isVideo) {
+    return (
+      <video
+        src={src}
+        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/img-placeholder.png"
+      />
+    );
+  }
+
+  return (
+    <Image
+      src={src || "/placeholder.svg"}
+      alt={alt}
+      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+      width={500}
+      height={500}
+    />
+  );
+};
 
 export default function NFTGrid() {
   return (
@@ -78,11 +112,7 @@ export default function NFTGrid() {
               className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20"
             >
               <div className="relative overflow-hidden">
-                <img
-                  src={nft.image || "/placeholder.svg"}
-                  alt={nft.title}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <MediaDisplay src={nft.image} alt={nft.title} />
                 <div className="absolute top-3 right-3 flex gap-2">
                   <Button
                     size="sm"

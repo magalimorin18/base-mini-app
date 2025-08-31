@@ -1,4 +1,10 @@
-import { Synapse, RPC_URLS } from "@filoz/synapse-sdk";
+import {
+  Synapse,
+  RPC_URLS,
+  // TOKENS,
+  // CONTRACT_ADDRESSES,
+} from "@filoz/synapse-sdk";
+// import { ethers } from "ethers";
 import { useState } from "react";
 
 const RPC_URL = RPC_URLS.calibration.websocket;
@@ -9,16 +15,6 @@ export type UploadedInfo = {
   commp?: string;
   txHash?: string;
 };
-
-// --------- This is a one time setup --------------- //
-
-// 1. Deposit USDFC tokens
-// const amount = ethers.parseUnits("1", 18);
-// await synapse.payments.deposit(amount, TOKENS.USDFC);
-
-// 2. Approve the Pandora service for automated payments
-// const pandoraAddress =
-//   CONTRACT_ADDRESSES.PANDORA_SERVICE[synapse.getNetwork()];
 
 export const useFileUpload = () => {
   const [progress, setProgress] = useState(0);
@@ -37,6 +33,17 @@ export const useFileUpload = () => {
       privateKey: filecoinPrivateKey,
       rpcURL: RPC_URL,
     });
+
+    // --------- This is a one time setup --------------- //
+
+    // // 1. Deposit USDFC tokens
+    // const amount = ethers.parseUnits("1", 18);
+    // await synapse.payments.deposit(amount, TOKENS.USDFC);
+
+    // // 2. Approve the Pandora service for automated payments
+    // const pandoraAddress =
+    //   CONTRACT_ADDRESSES.PANDORA_SERVICE[synapse.getNetwork()];
+    // -------------------------- //
 
     setProgress(40);
 

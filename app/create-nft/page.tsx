@@ -12,6 +12,15 @@ import { ArrowLeft, Upload, ImageIcon, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import NavBar from "@/components/NavBar";
+import { useFileUpload } from "@/lib/filecoin";
+import { useAccount, useDeployContract } from "wagmi";
+import lighthouse from "@lighthouse-web3/sdk";
+
+import NFT from "../contracts/NFT.json";
+import NFTMintSuccess from "@/components/NFTMintSuccess";
+
+const lighthouseApiKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_STORAGE_KEY;
+const filecoinPrivateKey = process.env.NEXT_PUBLIC_FILECOIN_PRIVATE_KEY;
 
 export default function CreateNFT() {
   const router = useRouter();
@@ -19,12 +28,33 @@ export default function CreateNFT() {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const { isConnected } = useAccount();
+
+  const { progress, uploadFile } = useFileUpload();
+  const { deployContractAsync } = useDeployContract();
+
+  const [file, setFile] = useState<FileList>();
+  const [fileMetadata, setFileMetadata] = useState<File | null>(null);
+  const [isMinting, setIsMinting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [progressMint, setProgressMint] = useState(0);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [mintedNFT, setMintedNFT] = useState<{
+    transactionHash: string;
+    tokenURI: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+  } | null>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
+    const file = event.target.files;
+    const fileMetadata = event.target.files?.[0];
+    if (file && fileMetadata && fileMetadata.type.startsWith("image/")) {
+      setFile(file);
+      setFileMetadata(fileMetadata);
+      const url = URL.createObjectURL(fileMetadata);
       setPreviewUrl(url);
     }
   };
@@ -42,6 +72,103 @@ export default function CreateNFT() {
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
+
+  const uploadFileToLighthouse = async (file: FileList) => {
+    if (!lighthouseApiKey) return;
+
+    console.log("⏳Uploading image to Lighthouse...");
+    const output = await lighthouse.upload(file, lighthouseApiKey, undefined);
+    console.log(
+      "Image uploaded at: https://gateway.lighthouse.storage/ipfs/" +
+        output.data.Hash,
+    );
+    return output.data.Hash;
+  };
+
+  const handleUploadToFilecoin = async () => {
+    if (!fileMetadata || !filecoinPrivateKey) return;
+    setIsUploading(true);
+    const commp = await uploadFile(fileMetadata, filecoinPrivateKey);
+    console.log("✅ Uploaded to Filecoin with CID:", commp);
+    setIsUploading(false);
+  };
+
+  const handleMintNFT = async () => {
+    if (!file || !title || !description) return;
+
+    if (!isConnected) {
+      alert("Connect your Wallet");
+    }
+
+    setIsMinting(true);
+    setProgressMint(10);
+
+    try {
+      const lighthouseCID = await uploadFileToLighthouse(file);
+
+      setProgressMint(50);
+
+      setProgressMint(70);
+
+      const tokenURI = `https://gateway.lighthouse.storage/ipfs/${lighthouseCID}`;
+
+      const bytecode = NFT.bytecode as `0x${string}`;
+      const transactionHash = await deployContractAsync({
+        abi: NFT.abi,
+        args: [title, description, tokenURI],
+        bytecode,
+      });
+
+      console.log("👩‍💻transactionHash", transactionHash);
+
+      setProgressMint(80);
+
+      setProgressMint(90);
+      setProgressMint(100);
+
+      setIsMinting(false);
+      setMintedNFT({
+        transactionHash: transactionHash,
+        tokenURI: tokenURI,
+        title: title,
+        description: description,
+        imageUrl: previewUrl,
+      });
+      setIsSuccess(true);
+    } catch (error) {
+      console.error("❌ Error minting NFT:", error);
+      setIsMinting(false);
+      setProgressMint(0);
+      alert(
+        `Failed to mint NFT: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  };
+
+  const handleReset = () => {
+    setIsSuccess(false);
+    setMintedNFT(null);
+    setFile(undefined);
+    setFileMetadata(null);
+    setPreviewUrl("");
+    setTitle("");
+    setDescription("");
+    setProgressMint(0);
+  };
+
+  if (isSuccess && mintedNFT) {
+    return (
+      <NFTMintSuccess
+        transactionHash={mintedNFT.transactionHash}
+        tokenURI={mintedNFT.tokenURI}
+        title={mintedNFT.title}
+        description={mintedNFT.description}
+        imageUrl={mintedNFT.imageUrl}
+        onReset={handleReset}
+        onExplore={() => router.push("/")}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -109,8 +236,7 @@ export default function CreateNFT() {
                           Drop your file here, or browse
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Supports: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV,
-                          OGG, GLB, GLTF. Max size: 40MB
+                          Supports: JPG, PNG, GIF, SVG
                         </p>
                       </div>
                     </div>
@@ -124,15 +250,27 @@ export default function CreateNFT() {
                   />
                 </div>
                 <div className="flex justify-center pt-2 items-end h-full">
+                  {/* Upload Filecoin Button */}
                   <Button
-                    size="lg"
+                    onClick={handleUploadToFilecoin}
+                    disabled={!fileMetadata}
                     className="text-lg px-12 py-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg"
-                    disabled={!selectedFile || !title.trim()}
                   >
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Upload To Filecoin
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {isUploading
+                      ? "Uploading to Filecoin..."
+                      : "Upload To Filecoin"}
+                    {isUploading && (
+                      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 ">
+                        <div
+                          className="bg-green-500 h-2.5 rounded-full transition-all duration-500"
+                          style={{ width: `${progress}%` }}
+                        ></div>
+                      </div>
+                    )}
                   </Button>
                 </div>
+                {progress == 100 && file && <p>✅ Uploaded to Filecoin</p>}
               </CardContent>
             </Card>
 
@@ -144,11 +282,11 @@ export default function CreateNFT() {
               <CardContent className="space-y-6 flex-1">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-medium">
-                    Title *
+                    TITLE
                   </Label>
                   <Input
                     id="title"
-                    placeholder="Enter NFT title"
+                    placeholder="Enter title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="border-border focus:border-primary"
@@ -157,52 +295,36 @@ export default function CreateNFT() {
 
                 <div className="space-y-2">
                   <Label htmlFor="description" className="text-sm font-medium">
-                    Description
+                    SYMBOL
                   </Label>
                   <Textarea
                     id="description"
-                    placeholder="Describe your NFT..."
+                    placeholder="Enter symbol..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="border-border focus:border-primary min-h-[120px] resize-none"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="collection" className="text-sm font-medium">
-                    Collection
-                  </Label>
-                  <Input
-                    id="collection"
-                    placeholder="Choose collection (optional)"
-                    className="border-border focus:border-primary"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="royalties" className="text-sm font-medium">
-                    Royalties (%)
-                  </Label>
-                  <Input
-                    id="royalties"
-                    type="number"
-                    placeholder="0"
-                    min="0"
-                    max="10"
-                    className="border-border focus:border-primary"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Suggested: 0%, 2.5%, 5%, 10%. Maximum is 10%
-                  </p>
-                </div>
                 <div className="flex justify-center pt-2">
                   <Button
                     size="lg"
                     className="text-lg px-12 py-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg"
-                    disabled={!selectedFile || !title.trim()}
+                    disabled={!file || !fileMetadata || !title || !description}
+                    onClick={handleMintNFT}
                   >
                     <Sparkles className="w-5 h-5 mr-2" />
-                    Mint NFT
+                    {isMinting
+                      ? "Deploying your Digital Art Work..."
+                      : "Deploy Digital Art Work"}
+                    {isMinting && (
+                      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 ">
+                        <div
+                          className="bg-green-500 h-2.5 rounded-full transition-all duration-500"
+                          style={{ width: `${progressMint}%` }}
+                        ></div>
+                      </div>
+                    )}
                   </Button>
                 </div>
               </CardContent>
@@ -217,15 +339,8 @@ export default function CreateNFT() {
               </h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  • Your artwork will be uploaded to IPFS for decentralized
-                  storage
-                </li>
-                <li>• A unique NFT will be created on the Base blockchain</li>
-                <li>
-                  • You&apos;ll retain full ownership and can list it for sale
-                </li>
-                <li>
-                  • Gas fees will be required to complete the minting process
+                  Your artwork will be uploaded to IPFS for decentralized
+                  storage thanks to Filecoin
                 </li>
               </ul>
             </CardContent>
