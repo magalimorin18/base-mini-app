@@ -119,20 +119,6 @@ export default function NavBar() {
               >
                 Explore
               </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors py-3 px-4 rounded-md hover:bg-accent/50 text-lg font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Collections
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors py-3 px-4 rounded-md hover:bg-accent/50 text-lg font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Artists
-              </a>
               {saveFrameButton}
               <Wallet className="z-10">
                 <ConnectWallet className="bg-gray-900 hover:bg-gray-800 text-white">
