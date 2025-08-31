@@ -1,6 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import NFTGrid from "@/components/NFTGrid";
 import FilterSection from "@/components/FilterSection";
@@ -22,7 +22,7 @@ export default function NFTGallery() {
       <NFTGrid />
 
       {/* Footer */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
