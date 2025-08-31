@@ -13,10 +13,11 @@ import { useRouter } from "next/navigation";
 
 import NavBar from "@/components/NavBar";
 import { useFileUpload } from "@/lib/filecoin";
-import { useDeployContract } from "wagmi";
+import { useAccount, useDeployContract } from "wagmi";
 import lighthouse from "@lighthouse-web3/sdk";
 
 import NFT from "../contracts/NFT.json";
+import NFTMintSuccess from "@/components/NFTMintSuccess";
 
 const lighthouseApiKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_STORAGE_KEY;
 const filecoinPrivateKey = process.env.NEXT_PUBLIC_FILECOIN_PRIVATE_KEY;
@@ -27,6 +28,7 @@ export default function CreateNFT() {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const { isConnected } = useAccount();
 
   const { progress, uploadFile } = useFileUpload();
   const { deployContractAsync } = useDeployContract();
@@ -36,6 +38,15 @@ export default function CreateNFT() {
   const [isMinting, setIsMinting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [progressMint, setProgressMint] = useState(0);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [mintedNFT, setMintedNFT] = useState<{
+    transactionHash: string;
+    tokenURI: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+  } | null>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files;
@@ -84,38 +95,80 @@ export default function CreateNFT() {
 
   const handleMintNFT = async () => {
     if (!file || !title || !description) return;
+
+    if (!isConnected) {
+      alert("Connect your Wallet");
+    }
+
     setIsMinting(true);
     setProgressMint(10);
-    const lighthouseCID = await uploadFileToLighthouse(file);
 
-    setProgressMint(50);
+    try {
+      const lighthouseCID = await uploadFileToLighthouse(file);
 
-    setProgressMint(70);
+      setProgressMint(50);
 
-    const tokenURI = `https://ipfs.io/ipfs/${lighthouseCID}`;
+      setProgressMint(70);
 
-    const bytecode = NFT.bytecode as `0x${string}`;
-    const contract = await deployContractAsync({
-      abi: NFT.abi,
-      args: [title, "SYMBOL", tokenURI],
-      bytecode,
-    });
+      const tokenURI = `https://gateway.lighthouse.storage/ipfs/${lighthouseCID}`;
 
-    console.log("👩‍💻contract", contract);
+      const bytecode = NFT.bytecode as `0x${string}`;
+      const transactionHash = await deployContractAsync({
+        abi: NFT.abi,
+        args: [title, description, tokenURI],
+        bytecode,
+      });
 
-    setProgressMint(80);
+      console.log("👩‍💻transactionHash", transactionHash);
 
-    setProgressMint(90);
-    setProgressMint(100);
-    setIsMinting(false);
+      setProgressMint(80);
 
-    // Reset form after successful mint
+      setProgressMint(90);
+      setProgressMint(100);
+
+      setIsMinting(false);
+      setMintedNFT({
+        transactionHash: transactionHash,
+        tokenURI: tokenURI,
+        title: title,
+        description: description,
+        imageUrl: previewUrl,
+      });
+      setIsSuccess(true);
+    } catch (error) {
+      console.error("❌ Error minting NFT:", error);
+      setIsMinting(false);
+      setProgressMint(0);
+      alert(
+        `Failed to mint NFT: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  };
+
+  const handleReset = () => {
+    setIsSuccess(false);
+    setMintedNFT(null);
     setFile(undefined);
     setFileMetadata(null);
     setPreviewUrl("");
     setTitle("");
     setDescription("");
+    setProgressMint(0);
   };
+
+  if (isSuccess && mintedNFT) {
+    return (
+      <NFTMintSuccess
+        transactionHash={mintedNFT.transactionHash}
+        tokenURI={mintedNFT.tokenURI}
+        title={mintedNFT.title}
+        description={mintedNFT.description}
+        imageUrl={mintedNFT.imageUrl}
+        onReset={handleReset}
+        onExplore={() => router.push("/")}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

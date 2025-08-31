@@ -1,6 +1,5 @@
 "use client";
 
-// import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import NFTGrid from "@/components/NFTGrid";
 import FilterSection from "@/components/FilterSection";
