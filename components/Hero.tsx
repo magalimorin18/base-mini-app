@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -19,13 +20,15 @@ export default function Hero() {
             <TrendingUp className="w-5 h-5 mr-2" />
             Explore Gallery
           </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="text-lg px-8 bg-transparent border-gray-500"
-          >
-            Create NFT
-          </Button>
+          <Link href="/create-nft">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-8 bg-transparent border-gray-500"
+            >
+              Create NFT
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
