@@ -64,33 +64,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 - **Filecoin** - Decentralized storage network
 - **V0 by Vercel** - AI-powered UI generation
 
-## 📋 Development Status
-
-### ✅ Completed Features
-
-- [x] **[Magali]** V0 Vercel integration
-- [x] **[Magali]** Mini app core functionality
-  - Photo upload for digital artwork
-  - Title and description input
-
-### ⏳ In Progress
-
-- [x] **[Magali]** Filecoin integration
-- [ ] **[Magali]** NFT minting functionality on Base
-
-### 🔄 Pending Tasks
-
-#### High Priority
-
-- [x] **[Luciano]** Deploy as Base Mini App
-- [ ] **[Luciano]** Frontend UI/UX improvements
-
-#### Future Enhancements (If Time Permits)
-
-- [ ] Farcaster Frame integration for social sharing
-- [ ] AI-powered art generation tool
-- [ ] App in spanish and english
-
 ## 🏆 Hackathon Tracks
 
 This project is being developed for the following tracks:
